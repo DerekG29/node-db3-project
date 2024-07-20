@@ -1,13 +1,15 @@
-/*
-  If `scheme_id` does not exist in the database:
+const { checkId } = require('./scheme-model');
 
-  status 404
-  {
-    "message": "scheme with scheme_id <actual id> not found"
+const checkSchemeId = async (req, res, next) => {
+  const { scheme_id } = req.params;
+  const result = await checkId(scheme_id);
+  if (result.scheme_id) {
+    next();
+  } else {
+    res.status(400).json({
+      message: `scheme with scheme_id ${scheme_id} not found`
+    });
   }
-*/
-const checkSchemeId = (req, res, next) => {
-
 }
 
 /*

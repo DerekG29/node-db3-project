@@ -64,10 +64,18 @@ async function addStep(scheme_id, step) { // EXERCISE E
   return allSteps;
 }
 
-module.exports = {
+async function checkId(scheme_id) {
+  const result = await db('schemes')
+    .where('scheme_id', scheme_id)
+    .first();
+  return result;
+}
+
+module.exports = {   
   find,
   findById,
   findSteps,
   add,
   addStep,
+  checkId
 }
