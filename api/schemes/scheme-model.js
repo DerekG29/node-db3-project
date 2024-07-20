@@ -7,7 +7,6 @@ async function find() { // EXERCISE A
     .orderBy('sc.scheme_id')
     .count({ number_of_steps: 'st.step_id' })
     .select('sc.*')
-
   return result;
 }
 
@@ -23,7 +22,6 @@ async function findById(id) { // EXERCISE B
       'sc.scheme_name',
       'sc.scheme_id as scheme_id'
     );
-
   const result = data.reduce((acc, row) => {
     if (row.instructions) {
       acc.steps.push({
@@ -38,7 +36,6 @@ async function findById(id) { // EXERCISE B
     scheme_name: data[0].scheme_name,
     steps: []
   });
-
   return result;
 }
 
@@ -48,26 +45,23 @@ async function findSteps(scheme_id) { // EXERCISE C
     .where('st.scheme_id', scheme_id)
     .orderBy('step_number')
     .select('step_id', 'step_number', 'instructions', 'scheme_name')
-
   return result;
 }
 
 async function add(scheme) { // EXERCISE D
   const result = await db('schemes')
     .insert(scheme);
-
   const newScheme = await db('schemes')
     .where('scheme_id', result);
-
   return newScheme;
 }
 
-function addStep(scheme_id, step) { // EXERCISE E
-  /*
-    1E- This function adds a step to the scheme with the given `scheme_id`
-    and resolves to _all the steps_ belonging to the given `scheme_id`,
-    including the newly created one.
-  */
+async function addStep(scheme_id, step) { // EXERCISE E
+  const { instructions, step_number } = step; 
+  await db('steps')
+    .insert({ scheme_id, instructions, step_number });
+  const allSteps = await findSteps(scheme_id);
+  return allSteps;
 }
 
 module.exports = {
