@@ -52,7 +52,8 @@ async function add(scheme) { // EXERCISE D
   const result = await db('schemes')
     .insert(scheme);
   const newScheme = await db('schemes')
-    .where('scheme_id', result);
+    .where('scheme_id', result)
+    .first();
   return newScheme;
 }
 
